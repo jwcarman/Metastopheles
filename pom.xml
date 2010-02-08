@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.metastopheles</groupId>
+    <artifactId>metastopheles</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>metastopheles</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.scannotation</groupId>
+            <artifactId>scannotation</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <site>
+            <id>sourceforge.net</id>
+            <name>Metastopheles Site</name>
+            <url>scp://web.sourceforge.net/home/groups/m/me/metastopheles/htdocs</url>
+        </site>
+        <repository>
+            <id>sourceforge.net</id>
+            <name>Metastopheles Release</name>
+            <url>scp://web.sourceforge.net/home/groups/m/me/metastopheles/htdocs/m2repo/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>sourceforge.net</id>
+            <name>Metastopheles Snapshot</name>
+            <url>scp://web.sourceforge.net/home/groups/m/me/metastopheles/htdocs/m2repo/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:svn:http://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk</connection>
+        <developerConnection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk
+        </developerConnection>
+        <url>http://metastopheles.svn.sourceforge.net/viewvc/metastopheles/trunk</url>
+    </scm>
+
+    <mailingLists>
+        <mailingList>
+            <name>Metastopheles Users List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/metastopheles-user</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/metastopheles-user</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=metastopheles-user</archive>
+        </mailingList>
+        <mailingList>
+            <name>Metastopheles Developers List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/metastopheles-developer</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/metastopheles-developer</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=metastopheles-developer</archive>
+        </mailingList>
+        <mailingList>
+            <name>Metastopheles Commits List</name>
+            <subscribe>http://lists.sourceforge.net/mailman/listinfo/metastopheles-commits</subscribe>
+            <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/metastopheles-commits</unsubscribe>
+            <archive>http://sourceforge.net/mailarchive/forum.php?forum=metastopheles-commits</archive>
+        </mailingList>
+    </mailingLists>
+</project>
