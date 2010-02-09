@@ -21,6 +21,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author James Carman
@@ -77,6 +79,11 @@ public class BeanMetaData extends MetaDataObject
         propertyMetaDataMap.put(propertyMetaData.getPropertyDescriptor().getName(), propertyMetaData);
     }
 
+    protected Object writeReplace()
+    {
+        return new SerializedForm(factoryId, beanDescriptor.getBeanClass());
+    }
+
     public MethodMetaData getMethodMetaData(String methodName, Class<?>... parameterTypes)
     {
         try
@@ -88,16 +95,29 @@ public class BeanMetaData extends MetaDataObject
             throw new IllegalArgumentException("Method " + methodName + " not found on class " + getBeanDescriptor().getBeanClass().getName() + ".", e);
         }
     }
-    
+
+    /**
+     * Returns the @{link PropertyMetaData} object for the property named <code>propertyName</code>.
+     * @param propertyName the property name
+     * @return the @{link PropertyMetaData} object for the property named <code>propertyName</code>
+     */
     public PropertyMetaData getPropertyMetaData(String propertyName)
     {
         return propertyMetaDataMap.get(propertyName);
     }
 
-    protected Object writeReplace()
+    /**
+     * Returns a (modifiable) set containing all of the property names for this bean type.
+     * @return a (modifiable) set containing all of the property names for this bean type
+     */
+    public Set<String> getPropertyNames()
     {
-        return new SerializedForm(factoryId, beanDescriptor.getBeanClass());
+        return new TreeSet<String>(propertyMetaDataMap.keySet());
     }
+    
+//**********************************************************************************************************************
+// Inner Classes
+//**********************************************************************************************************************
 
     private static class SerializedForm implements Serializable
     {
