@@ -29,6 +29,7 @@ public class PropertyMetaData extends MetaDataObject
 // Fields
 //**********************************************************************************************************************
 
+    private static final long serialVersionUID = 1L;
     private PropertyDescriptor propertyDescriptor;
     private final BeanMetaData beanMetaData;
 
@@ -85,8 +86,10 @@ public class PropertyMetaData extends MetaDataObject
 
     private static class SerializedForm implements Serializable
     {
+        private static final long serialVersionUID = 1L;
         private final BeanMetaData beanMetaData;
         private final String propertyName;
+
 
         private SerializedForm(BeanMetaData beanMetaData, String propertyName)
         {

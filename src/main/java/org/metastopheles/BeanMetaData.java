@@ -32,6 +32,7 @@ public class BeanMetaData extends MetaDataObject
 // Fields
 //**********************************************************************************************************************
 
+    private static final long serialVersionUID = 1L;
     private final BeanDescriptor beanDescriptor;
     private final Map<String, PropertyMetaData> propertyMetaDataMap = new HashMap<String,PropertyMetaData>();
     private final Map<Method,MethodMetaData> methodMethodMetaDataMap = new HashMap<Method,MethodMetaData>();

@@ -34,7 +34,8 @@ public abstract class MetaDataObject implements Serializable
 // Fields
 //**********************************************************************************************************************
 
-    private Map<AttributeKey<?>,Serializable> attributeMap = new HashMap<AttributeKey<?>, Serializable>();
+    private static final long serialVersionUID = 1L;
+    private Map<AttributeKey<?>,Object> attributeMap = new HashMap<AttributeKey<?>, Object>();
 
 //**********************************************************************************************************************
 // Abstract Methods
@@ -56,7 +57,7 @@ public abstract class MetaDataObject implements Serializable
      * @return the attribute value
      */
     @SuppressWarnings("unchecked")
-    public <T extends Serializable> T getAttribute(AttributeKey<T> key)
+    public <T> T getAttribute(AttributeKey<T> key)
     {
         return (T) attributeMap.get(key);
     }
@@ -78,7 +79,7 @@ public abstract class MetaDataObject implements Serializable
      * @param key the attribute key
      * @param value the attribute value
      */
-    public <T extends Serializable> void setAttribute(AttributeKey<T> key, T value)
+    public <T> void setAttribute(AttributeKey<T> key, T value)
     {
         attributeMap.put(key, value);
     }

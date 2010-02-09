@@ -28,7 +28,8 @@ public class MethodMetaData extends MetaDataObject
 //**********************************************************************************************************************
 // Fields
 //**********************************************************************************************************************
-
+    
+    private static final long serialVersionUID = 1L;
     private final MethodDescriptor methodDescriptor;
     private final BeanMetaData beanMetaData;
 
@@ -72,9 +73,11 @@ public class MethodMetaData extends MetaDataObject
 
     private static class SerializedForm implements Serializable
     {
+        private static final long serialVersionUID = 1L;
         private final BeanMetaData beanMetaData;
         private final String methodName;
         private final Class<?>[] parameterTypes;
+
 
         private SerializedForm(BeanMetaData beanMetaData, String methodName, Class<?>[] parameterTypes)
         {
