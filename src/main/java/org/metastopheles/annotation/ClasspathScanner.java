@@ -35,16 +35,19 @@ import java.net.URL;
  * @author James Carman
  * @since 1.0
  */
-public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
+public class ClasspathScanner
 {
 //**********************************************************************************************************************
 // Static Methods
 //**********************************************************************************************************************
 
-    private ClassLoader contextClassLoader()
+    private static ClassLoader contextClassLoader()
     {
         return Thread.currentThread().getContextClassLoader();
     }
+
+    private final ClassLoader cl;
+    private final URL[] urls;
 
     @SuppressWarnings("unchecked")
     private MetaDataDecorator decorator(Object provider, Method method, Class<? extends Annotation> annotationType)
@@ -56,8 +59,15 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
 // Other Methods
 //**********************************************************************************************************************
 
+
     @SuppressWarnings("unchecked")
-    public AnnotationBeanMetaDataFactory appendAnnotationBasedDecorators(ClassLoader cl, URL[] urls)
+    public ClasspathScanner(ClassLoader cl, URL[] urls)
+    {
+        this.cl = cl;
+        this.urls = urls;
+    }
+
+    public void appendTo(BeanMetaDataFactory factory)
     {
         AnnotationDB annotationDB = new AnnotationDB();
         annotationDB.setScanClassAnnotations(true);
@@ -80,20 +90,19 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
                         Class<? extends Annotation> annotationType = (Class<? extends Annotation>) parameterTypes[1];
                         if (PropertyMetaData.class.isAssignableFrom(metaDataType))
                         {
-                            getPropertyMetaDataDecorators().add(decorator(provider, method, annotationType));
+                            factory.getPropertyMetaDataDecorators().add(decorator(provider, method, annotationType));
                         }
                         else if (BeanMetaData.class.isAssignableFrom(metaDataType))
                         {
-                            getBeanMetaDataDecorators().add(decorator(provider, method, annotationType));
+                            factory.getBeanMetaDataDecorators().add(decorator(provider, method, annotationType));
                         }
                         else if (MethodMetaData.class.isAssignableFrom(metaDataType))
                         {
-                            getMethodMetaDataDecorators().add(decorator(provider, method, annotationType));
+                            factory.getMethodMetaDataDecorators().add(decorator(provider, method, annotationType));
                         }
                     }
                 }
             }
-            return this;
         }
         catch (ClassNotFoundException e)
         {
@@ -113,29 +122,29 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
         }
     }
 
-    public AnnotationBeanMetaDataFactory appendAnnotationBasedDecorators()
+    public ClasspathScanner()
     {
-        return appendAnnotationBasedDecorators(contextClassLoader(), ClasspathUrlFinder.findClassPaths());
+        this(contextClassLoader(), ClasspathUrlFinder.findClassPaths());
     }
     
-    public AnnotationBeanMetaDataFactory appendAnnotationBasedDecorators(String... paths)
+    public ClasspathScanner(String... paths)
     {
-        return appendAnnotationBasedDecorators(contextClassLoader(), ClasspathUrlFinder.findClassPaths(paths));
+        this(contextClassLoader(), ClasspathUrlFinder.findClassPaths(paths));
     }
 
-    public AnnotationBeanMetaDataFactory appendAnnotationBasedDecorators(URL[] urls)
+    public ClasspathScanner(URL[] urls)
     {
-        return appendAnnotationBasedDecorators(contextClassLoader(), urls);
+        this(contextClassLoader(), urls);
     }
 
-    public AnnotationBeanMetaDataFactory appendAnnotationBasedDecorators(ClassLoader classLoader)
+    public ClasspathScanner(ClassLoader classLoader)
     {
-        return appendAnnotationBasedDecorators(classLoader, ClasspathUrlFinder.findClassPaths());
+        this(classLoader, ClasspathUrlFinder.findClassPaths());
     }
 
-    public AnnotationBeanMetaDataFactory appendAnnotationBasedDecorators(ClassLoader classLoader, String... paths)
+    public ClasspathScanner(ClassLoader classLoader, String... paths)
     {
-        return appendAnnotationBasedDecorators(classLoader, ClasspathUrlFinder.findClassPaths(paths));
+        this(classLoader, ClasspathUrlFinder.findClassPaths(paths));
     }
 
 //**********************************************************************************************************************
