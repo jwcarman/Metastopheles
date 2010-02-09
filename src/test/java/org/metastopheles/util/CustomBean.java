@@ -13,17 +13,21 @@
  * limitations under the License.
  */
 
-package org.metastopheles;
+package org.metastopheles.util;
+
+import org.metastopheles.util.BeanAnnotation;
+import org.metastopheles.util.MethodAnnotation;
+import org.metastopheles.util.PropertyAnnotation;
 
 /**
  * @author James Carman
  */
-@CustomAnnotation
+@BeanAnnotation
 public class CustomBean
 {
     private String name;
 
-    @CustomAnnotation
+    @PropertyAnnotation
     public String getName()
     {
         return name;
@@ -34,6 +38,7 @@ public class CustomBean
         this.name = name;
     }
 
+    @MethodAnnotation
     public void someMethod()
     {
         

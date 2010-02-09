@@ -58,7 +58,7 @@ public class BeanMetaData extends MetaDataObject
 //**********************************************************************************************************************
 
     @Override
-    protected AnnotatedElement getAnnotatedElement()
+    protected AnnotatedElement getDefaultAnnotationSource()
     {
         return beanDescriptor.getBeanClass();
     }
@@ -73,11 +73,18 @@ public class BeanMetaData extends MetaDataObject
         propertyMetaDataMap.put(propertyMetaData.getPropertyDescriptor().getName(), propertyMetaData);
     }
 
-    public MethodMetaData getMethodMetaData(Method method)
+    public MethodMetaData getMethodMetaData(String methodName, Class<?>... parameterTypes)
     {
-        return methodMethodMetaDataMap.get(method);
+        try
+        {
+            return methodMethodMetaDataMap.get(getBeanDescriptor().getBeanClass().getMethod(methodName, parameterTypes));
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new IllegalArgumentException("Method " + methodName + " not found on class " + getBeanDescriptor().getBeanClass().getName() + ".", e);
+        }
     }
-
+    
     public PropertyMetaData getPropertyMetaData(String propertyName)
     {
         return propertyMetaDataMap.get(propertyName);

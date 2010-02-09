@@ -29,27 +29,38 @@ public class MethodMetaData extends MetaDataObject
 //**********************************************************************************************************************
 
     private final MethodDescriptor methodDescriptor;
+    private final BeanMetaData beanMetaData;
 
 //**********************************************************************************************************************
 // Constructors
 //**********************************************************************************************************************
 
-    public MethodMetaData(MethodDescriptor methodDescriptor)
+    public MethodMetaData(BeanMetaData beanMetaData, MethodDescriptor methodDescriptor)
     {
+        this.beanMetaData = beanMetaData;
         this.methodDescriptor = methodDescriptor;
     }
 
 //**********************************************************************************************************************
-// Other Methods
+// Getter/Setter Methods
 //**********************************************************************************************************************
+
+    public BeanMetaData getBeanMetaData()
+    {
+        return beanMetaData;
+    }
 
     public MethodDescriptor getMethodDescriptor()
     {
         return methodDescriptor;
     }
 
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
+
     @Override
-    protected AnnotatedElement getAnnotatedElement()
+    protected AnnotatedElement getDefaultAnnotationSource()
     {
         return methodDescriptor.getMethod();
     }

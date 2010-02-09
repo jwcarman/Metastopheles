@@ -15,7 +15,6 @@
 
 package org.metastopheles;
 
-import java.beans.BeanDescriptor;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -83,21 +82,6 @@ public class BeanMetaDataFactory
 // Other Methods
 //**********************************************************************************************************************
 
-    protected BeanMetaData createBeanMetaData(BeanDescriptor beanDescriptor)
-    {
-        return new BeanMetaData(beanDescriptor);
-    }
-
-    protected MethodMetaData createMethodMetaData(MethodDescriptor methodDescriptor)
-    {
-        return new MethodMetaData(methodDescriptor);
-    }
-
-    protected PropertyMetaData createPropertyMetaData(PropertyDescriptor propertyDescriptor)
-    {
-        return new PropertyMetaData(propertyDescriptor);
-    }
-
     public synchronized BeanMetaData getBeanMetaData(Class beanClass)
     {
         if (metaDataMap.containsKey(beanClass))
@@ -109,7 +93,7 @@ public class BeanMetaDataFactory
             try
             {
                 BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
-                BeanMetaData beanMetaData = createBeanMetaData(beanInfo.getBeanDescriptor());
+                BeanMetaData beanMetaData = new BeanMetaData(beanInfo.getBeanDescriptor());
                 for (MetaDataDecorator<BeanMetaData> decorator : beanMetaDataDecorators)
                 {
                     decorator.decorate(beanMetaData);
@@ -121,7 +105,7 @@ public class BeanMetaDataFactory
                     visitedMethods.add(descriptor.getWriteMethod());
                     if (!"class".equals(descriptor.getName()))
                     {
-                        final PropertyMetaData propertyMetaData = createPropertyMetaData(descriptor);
+                        final PropertyMetaData propertyMetaData = new PropertyMetaData(beanMetaData, descriptor);
                         beanMetaData.addPropertyMetaData(propertyMetaData);
                         for (MetaDataDecorator<PropertyMetaData> decorator : propertyMetaDataDecorators)
                         {
@@ -133,7 +117,7 @@ public class BeanMetaDataFactory
                 {
                     if (!visitedMethods.contains(descriptor.getMethod()) && !Object.class.equals(descriptor.getMethod().getDeclaringClass()))
                     {
-                        final MethodMetaData methodMetaData = createMethodMetaData(descriptor);
+                        final MethodMetaData methodMetaData = new MethodMetaData(beanMetaData, descriptor);
                         beanMetaData.addMethodMetaData(methodMetaData);
                         for (MetaDataDecorator<MethodMetaData> decorator : methodMetaDataDecorators)
                         {

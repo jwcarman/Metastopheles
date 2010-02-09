@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.metastopheles;
+package org.metastopheles.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  * @author James Carman
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface CustomAnnotation
+@Target({ElementType.TYPE})
+public @interface BeanAnnotation
 {
 }

@@ -13,12 +13,11 @@
  * limitations under the License.
  */
 
-package org.metastopheles;
+package org.metastopheles.util;
 
 /**
  * @author James Carman
- * @since 1.0
  */
-public abstract class AttributeKey<T>
+public @interface UnusedAnnotation
 {
 }

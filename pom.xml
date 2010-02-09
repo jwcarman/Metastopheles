@@ -28,6 +28,13 @@
             <artifactId>scannotation</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.9</version>
+            <classifier>jdk15</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

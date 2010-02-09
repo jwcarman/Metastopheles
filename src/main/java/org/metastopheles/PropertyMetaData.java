@@ -29,13 +29,15 @@ public class PropertyMetaData extends MetaDataObject
 //**********************************************************************************************************************
 
     private PropertyDescriptor propertyDescriptor;
+    private final BeanMetaData beanMetaData;
 
 //**********************************************************************************************************************
 // Constructors
 //**********************************************************************************************************************
 
-    public PropertyMetaData(PropertyDescriptor propertyDescriptor)
+    public PropertyMetaData(BeanMetaData beanMetaData, PropertyDescriptor propertyDescriptor)
     {
+        this.beanMetaData = beanMetaData;
         this.propertyDescriptor = propertyDescriptor;
     }
 
@@ -43,6 +45,15 @@ public class PropertyMetaData extends MetaDataObject
 // Getter/Setter Methods
 //**********************************************************************************************************************
 
+    public BeanMetaData getBeanMetaData()
+    {
+        return beanMetaData;
+    }
+
+    /**
+     * Returns the property descriptor
+     * @return the property descriptor
+     */
     public PropertyDescriptor getPropertyDescriptor()
     {
         return propertyDescriptor;
@@ -52,8 +63,12 @@ public class PropertyMetaData extends MetaDataObject
 // Other Methods
 //**********************************************************************************************************************
 
+    /**
+     * The default annotation source for a property is its getter method.
+     * @return the property's getter method
+     */
     @Override
-    protected AnnotatedElement getAnnotatedElement()
+    protected AnnotatedElement getDefaultAnnotationSource()
     {
         return propertyDescriptor.getReadMethod();
     }
