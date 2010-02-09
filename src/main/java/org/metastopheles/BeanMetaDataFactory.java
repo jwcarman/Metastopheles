@@ -21,11 +21,13 @@ import java.beans.Introspector;
 import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 /**
@@ -44,10 +46,23 @@ public class BeanMetaDataFactory
     private List<MetaDataDecorator<MethodMetaData>> methodMetaDataDecorators = new LinkedList<MetaDataDecorator<MethodMetaData>>();
     private List<MetaDataDecorator<PropertyMetaData>> propertyMetaDataDecorators = new LinkedList<MetaDataDecorator<PropertyMetaData>>();
 
+    private static final Map<String,BeanMetaDataFactory> factoryRegistry = new HashMap<String,BeanMetaDataFactory>();
+    private final String id = UUID.randomUUID().toString();
+
 //**********************************************************************************************************************
 // Getter/Setter Methods
 //**********************************************************************************************************************
 
+    public BeanMetaDataFactory()
+    {
+        factoryRegistry.put(id, this);
+    }
+
+    static BeanMetaDataFactory get(String id)
+    {
+        return factoryRegistry.get(id);
+    }
+    
     public List<MetaDataDecorator<BeanMetaData>> getBeanMetaDataDecorators()
     {
         return beanMetaDataDecorators;
@@ -93,7 +108,7 @@ public class BeanMetaDataFactory
             try
             {
                 BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
-                BeanMetaData beanMetaData = new BeanMetaData(beanInfo.getBeanDescriptor());
+                BeanMetaData beanMetaData = new BeanMetaData(id, beanInfo.getBeanDescriptor());
                 for (MetaDataDecorator<BeanMetaData> decorator : beanMetaDataDecorators)
                 {
                     decorator.decorate(beanMetaData);

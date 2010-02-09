@@ -16,6 +16,7 @@
 package org.metastopheles;
 
 import java.beans.BeanDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -34,13 +35,15 @@ public class BeanMetaData extends MetaDataObject
     private final BeanDescriptor beanDescriptor;
     private final Map<String, PropertyMetaData> propertyMetaDataMap = new HashMap<String,PropertyMetaData>();
     private final Map<Method,MethodMetaData> methodMethodMetaDataMap = new HashMap<Method,MethodMetaData>();
+    private final String factoryId;
 
 //**********************************************************************************************************************
 // Constructors
 //**********************************************************************************************************************
 
-    public BeanMetaData(BeanDescriptor beanDescriptor)
+    BeanMetaData(String factoryId, BeanDescriptor beanDescriptor)
     {
+        this.factoryId = factoryId;
         this.beanDescriptor = beanDescriptor;
     }
 
@@ -88,5 +91,27 @@ public class BeanMetaData extends MetaDataObject
     public PropertyMetaData getPropertyMetaData(String propertyName)
     {
         return propertyMetaDataMap.get(propertyName);
+    }
+
+    protected Object writeReplace()
+    {
+        return new SerializedForm(factoryId, beanDescriptor.getBeanClass());
+    }
+
+    private static class SerializedForm implements Serializable
+    {
+        private final String factoryId;
+        private final Class beanClass;
+
+        private SerializedForm(String factoryId, Class beanClass)
+        {
+            this.factoryId = factoryId;
+            this.beanClass = beanClass;
+        }
+
+        protected Object readResolve()
+        {
+            return BeanMetaDataFactory.get(factoryId).getBeanMetaData(beanClass);
+        }
     }
 }

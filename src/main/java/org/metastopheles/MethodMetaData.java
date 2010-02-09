@@ -16,6 +16,7 @@
 package org.metastopheles;
 
 import java.beans.MethodDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -35,7 +36,7 @@ public class MethodMetaData extends MetaDataObject
 // Constructors
 //**********************************************************************************************************************
 
-    public MethodMetaData(BeanMetaData beanMetaData, MethodDescriptor methodDescriptor)
+    MethodMetaData(BeanMetaData beanMetaData, MethodDescriptor methodDescriptor)
     {
         this.beanMetaData = beanMetaData;
         this.methodDescriptor = methodDescriptor;
@@ -55,6 +56,10 @@ public class MethodMetaData extends MetaDataObject
         return methodDescriptor;
     }
 
+    protected Object writeReplace()
+    {
+        return new SerializedForm(beanMetaData, methodDescriptor.getMethod().getName(), getMethodDescriptor().getMethod().getParameterTypes());
+    }
 //**********************************************************************************************************************
 // Other Methods
 //**********************************************************************************************************************
@@ -63,5 +68,24 @@ public class MethodMetaData extends MetaDataObject
     protected AnnotatedElement getDefaultAnnotationSource()
     {
         return methodDescriptor.getMethod();
+    }
+
+    private static class SerializedForm implements Serializable
+    {
+        private final BeanMetaData beanMetaData;
+        private final String methodName;
+        private final Class<?>[] parameterTypes;
+
+        private SerializedForm(BeanMetaData beanMetaData, String methodName, Class<?>[] parameterTypes)
+        {
+            this.beanMetaData = beanMetaData;
+            this.methodName = methodName;
+            this.parameterTypes = parameterTypes;
+        }
+
+        protected Object readResolve()
+        {
+            return beanMetaData.getMethodMetaData(methodName, parameterTypes);
+        }
     }
 }

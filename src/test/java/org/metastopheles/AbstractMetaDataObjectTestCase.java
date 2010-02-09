@@ -4,6 +4,11 @@ import org.metastopheles.util.UnusedAnnotation;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
@@ -69,5 +74,29 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
         Class<? extends Annotation> annotationType = getExpectedAnnotationType(prototype);
         assertNotNull(prototype.getAnnotation(annotationType));
         assertNull(prototype.getAnnotation(UnusedAnnotation.class));
+    }
+
+    @Test
+    public void testSerialization() throws IOException, ClassNotFoundException
+    {
+        T prototype = createPrototype();
+        T copy = serializedCopy(prototype);
+        assertSame(copy, prototype);
+    }
+
+    @SuppressWarnings("unchecked")
+    private T serializedCopy(T prototype) throws IOException, ClassNotFoundException
+    {
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        final ObjectOutputStream oout = new ObjectOutputStream(bout);
+        oout.writeObject(prototype);
+        oout.close();
+        bout.close();
+        final ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+        final ObjectInputStream oin = new ObjectInputStream(bin);
+        T copy = (T)oin.readObject();
+        oin.close();
+        bin.close();
+        return copy;
     }
 }

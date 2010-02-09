@@ -16,6 +16,7 @@
 package org.metastopheles;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 
 /**
@@ -35,7 +36,7 @@ public class PropertyMetaData extends MetaDataObject
 // Constructors
 //**********************************************************************************************************************
 
-    public PropertyMetaData(BeanMetaData beanMetaData, PropertyDescriptor propertyDescriptor)
+    PropertyMetaData(BeanMetaData beanMetaData, PropertyDescriptor propertyDescriptor)
     {
         this.beanMetaData = beanMetaData;
         this.propertyDescriptor = propertyDescriptor;
@@ -71,5 +72,31 @@ public class PropertyMetaData extends MetaDataObject
     protected AnnotatedElement getDefaultAnnotationSource()
     {
         return propertyDescriptor.getReadMethod();
+    }
+
+    protected Object writeReplace()
+    {
+        return new SerializedForm(beanMetaData, propertyDescriptor.getName());
+    }
+
+//**********************************************************************************************************************
+// Inner Classes
+//**********************************************************************************************************************
+
+    private static class SerializedForm implements Serializable
+    {
+        private final BeanMetaData beanMetaData;
+        private final String propertyName;
+
+        private SerializedForm(BeanMetaData beanMetaData, String propertyName)
+        {
+            this.beanMetaData = beanMetaData;
+            this.propertyName = propertyName;
+        }
+
+        protected Object readResolve()
+        {
+            return beanMetaData.getPropertyMetaData(propertyName);
+        }
     }
 }

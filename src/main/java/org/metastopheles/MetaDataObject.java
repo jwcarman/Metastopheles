@@ -15,6 +15,7 @@
 
 package org.metastopheles;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashMap;
@@ -27,13 +28,13 @@ import java.util.Set;
  * @author James Carman
  * @since 1.0
  */
-public abstract class MetaDataObject
+public abstract class MetaDataObject implements Serializable
 {
 //**********************************************************************************************************************
 // Fields
 //**********************************************************************************************************************
 
-    private Map<AttributeKey<?>,Object> attributeMap = new HashMap<AttributeKey<?>, Object>();
+    private Map<AttributeKey<?>,Serializable> attributeMap = new HashMap<AttributeKey<?>, Serializable>();
 
 //**********************************************************************************************************************
 // Abstract Methods
@@ -55,7 +56,7 @@ public abstract class MetaDataObject
      * @return the attribute value
      */
     @SuppressWarnings("unchecked")
-    public <T> T getAttribute(AttributeKey<T> key)
+    public <T extends Serializable> T getAttribute(AttributeKey<T> key)
     {
         return (T) attributeMap.get(key);
     }
@@ -77,7 +78,7 @@ public abstract class MetaDataObject
      * @param key the attribute key
      * @param value the attribute value
      */
-    public <T> void setAttribute(AttributeKey<T> key, T value)
+    public <T extends Serializable> void setAttribute(AttributeKey<T> key, T value)
     {
         attributeMap.put(key, value);
     }
