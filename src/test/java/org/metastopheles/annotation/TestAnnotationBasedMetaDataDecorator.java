@@ -13,7 +13,7 @@ import static org.testng.Assert.*;
 
 public class TestAnnotationBasedMetaDataDecorator
 {
-    private static final AttributeKey<Boolean> FOUND = new AttributeKey<Boolean>() {};
+    public static final AttributeKey<Boolean> FOUND = new AttributeKey<Boolean>() {};
 
     @Test
     public void testAnnotationsFound()
