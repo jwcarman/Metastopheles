@@ -24,16 +24,24 @@ import java.util.TreeMap;
 
 public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
 {
+//**********************************************************************************************************************
+// Fields
+//**********************************************************************************************************************
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public AnnotationBeanMetaDataFactory(Class baseClass)
-    {
-        this(ClasspathUrlFinder.findClassBase(baseClass));
-    }
-    
+//**********************************************************************************************************************
+// Constructors
+//**********************************************************************************************************************
+
     public AnnotationBeanMetaDataFactory()
     {
         this(ClasspathUrlFinder.findClassPaths());
+    }
+
+    public AnnotationBeanMetaDataFactory(Class baseClass)
+    {
+        this(ClasspathUrlFinder.findResourceBases(baseClass.getName().replace('.', '/') + ".class", baseClass.getClassLoader() == null ? ClassLoader.getSystemClassLoader() : baseClass.getClassLoader()));
     }
 
     public AnnotationBeanMetaDataFactory(URL... urls)
@@ -51,13 +59,16 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
             scanForMetaDataMethods(index, targets, BeanMetaData.class, BeanDecorator.class, getBeanMetaDataDecorators());
             scanForMetaDataMethods(index, targets, PropertyMetaData.class, PropertyDecorator.class, getPropertyMetaDataDecorators());
             scanForMetaDataMethods(index, targets, MethodMetaData.class, MethodDecorator.class, getMethodMetaDataDecorators());
-
         }
         catch (IOException e)
         {
             throw new RuntimeException("Unable to scan classpath for annotations.", e);
         }
     }
+
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
 
     @SuppressWarnings("unchecked")
     private <T extends MetaDataObject> void scanForMetaDataMethods(Map<String, Set<String>> index, Map<String,Object> targets, Class<T> metaDataType, Class<? extends Annotation> markerAnnotationType, List<MetaDataDecorator<T>> decorators)
@@ -91,15 +102,13 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
                                 Object target = targets.get(c.getName());
                                 if (target == null)
                                 {
-                                    logger.info("Instantiating " + c.getName() + " instance to handle decorator methods found...");
+                                    logger.debug("Instantiating " + c.getName() + " instance to handle decorator methods found...");
                                     target = c.newInstance();
                                     targets.put(c.getName(), target);
                                 }
 
                                 decorators.add(new MethodBasedDecorator(annotationType, target, method));
                             }
-
-
                         }
                     }
                 }
@@ -117,8 +126,11 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
                 logger.error("Unable to instantiate object of type " + className + ".", e);
             }
         }
-
     }
+
+//**********************************************************************************************************************
+// Inner Classes
+//**********************************************************************************************************************
 
     private static class MethodBasedDecorator<T extends MetaDataObject, A extends Annotation> extends AnnotationBasedMetaDataDecorator<T, A>
     {
@@ -147,7 +159,6 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
             {
                 throw new RuntimeException("Decorator method " + method + " threw an exception.", e.getTargetException());
             }
-
         }
     }
 }

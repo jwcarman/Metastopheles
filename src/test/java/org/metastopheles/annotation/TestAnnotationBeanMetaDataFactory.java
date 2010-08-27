@@ -34,6 +34,25 @@ public class TestAnnotationBeanMetaDataFactory
         assertEquals(StaticDecorators.getInstanceCount(), 0);
     }
 
+    @Test()
+    public void testBaseClassConstructorWithSystemBaseClass()
+    {
+        AnnotationBeanMetaDataFactory local = new AnnotationBeanMetaDataFactory(System.class); // Use system classpath!
+        BeanMetaData meta = local.getBeanMetaData(FindMeBean.class);
+        assertNull(meta.getAttribute(StaticDecorators.FOUND));
+        assertNull(meta.getPropertyMetaData("name").getAttribute(StaticDecorators.FOUND));
+        assertNull(meta.getMethodMetaData("someMethod").getAttribute(StaticDecorators.FOUND));
+    }
+
+    @Test(dependsOnMethods = {"testInstanceDecorators", "testStaticDecorators"})
+    public void testBaseClassConstructorWithGoodBaseClass()
+    {
+        AnnotationBeanMetaDataFactory local = new AnnotationBeanMetaDataFactory(FindMeBean.class);
+        BeanMetaData meta = local.getBeanMetaData(FindMeBean.class);
+        assertTrue(Boolean.TRUE.equals(meta.getAttribute(StaticDecorators.FOUND)));
+        assertTrue(Boolean.TRUE.equals(meta.getPropertyMetaData("name").getAttribute(StaticDecorators.FOUND)));
+        assertTrue(Boolean.TRUE.equals(meta.getMethodMetaData("someMethod").getAttribute(StaticDecorators.FOUND)));
+    }
 
     @BeforeClass
     protected void setUp() throws Exception
