@@ -69,7 +69,7 @@ public abstract class MetaDataObject implements Serializable
      * @return the annotation
      * @see #getDefaultAnnotationSource()
      */
-    public <T extends Annotation> T getAnnotation(Class<T> annotationType)
+    public <A extends Annotation> A getAnnotation(Class<A> annotationType)
     {
         return getDefaultAnnotationSource().getAnnotation(annotationType);
     }
