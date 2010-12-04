@@ -42,17 +42,25 @@ public class BeanMetaDataFactory
 // Fields
 //**********************************************************************************************************************
 
+    private static final Map<String,BeanMetaDataFactory> factoryRegistry = new HashMap<String,BeanMetaDataFactory>();
     private final Map<Class, BeanMetaData> metaDataMap = new WeakHashMap<Class, BeanMetaData>();
 
     private List<MetaDataDecorator<BeanMetaData>> beanMetaDataDecorators = new LinkedList<MetaDataDecorator<BeanMetaData>>();
     private List<MetaDataDecorator<MethodMetaData>> methodMetaDataDecorators = new LinkedList<MetaDataDecorator<MethodMetaData>>();
     private List<MetaDataDecorator<PropertyMetaData>> propertyMetaDataDecorators = new LinkedList<MetaDataDecorator<PropertyMetaData>>();
-
-    private static final Map<String,BeanMetaDataFactory> factoryRegistry = new HashMap<String,BeanMetaDataFactory>();
     private final String id = UUID.randomUUID().toString();
 
 //**********************************************************************************************************************
-// Getter/Setter Methods
+// Static Methods
+//**********************************************************************************************************************
+
+    static BeanMetaDataFactory get(String id)
+    {
+        return factoryRegistry.get(id);
+    }
+
+//**********************************************************************************************************************
+// Constructors
 //**********************************************************************************************************************
 
     public BeanMetaDataFactory()
@@ -60,11 +68,10 @@ public class BeanMetaDataFactory
         factoryRegistry.put(id, this);
     }
 
-    static BeanMetaDataFactory get(String id)
-    {
-        return factoryRegistry.get(id);
-    }
-    
+//**********************************************************************************************************************
+// Getter/Setter Methods
+//**********************************************************************************************************************
+
     public List<MetaDataDecorator<BeanMetaData>> getBeanMetaDataDecorators()
     {
         return beanMetaDataDecorators;

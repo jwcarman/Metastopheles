@@ -31,6 +31,9 @@ import static org.testng.Assert.assertSame;
  */
 public class TestPropertyMetaData extends AbstractMetaDataObjectTestCase<PropertyMetaData>
 {
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
 
     @Override
     protected PropertyMetaData createPrototype()
@@ -44,16 +47,16 @@ public class TestPropertyMetaData extends AbstractMetaDataObjectTestCase<Propert
         return prototype.getPropertyDescriptor().getReadMethod();
     }
 
+    @Override
+    protected Class<? extends Annotation> getExpectedAnnotationType(PropertyMetaData prototype)
+    {
+        return PropertyAnnotation.class;
+    }
+
     @Test
     public void testBeanMetaDataReference()
     {
         final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
         assertSame(beanMetaData.getPropertyMetaData("name").getBeanMetaData(), beanMetaData);
-    }
-
-    @Override
-    protected Class<? extends Annotation> getExpectedAnnotationType(PropertyMetaData prototype)
-    {
-        return PropertyAnnotation.class;
     }
 }

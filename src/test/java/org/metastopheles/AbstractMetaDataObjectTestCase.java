@@ -42,8 +42,9 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
 //**********************************************************************************************************************
 // Fields
 //**********************************************************************************************************************
-    private static final AttributeKey<String> ATTRIBUTE_KEY = new AttributeKey<String>() {};
-    private static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE";
+
+    private static final FacetKey<String> FACET_KEY = new FacetKey<String>() {};
+    private static final String FACET_VALUE = "FACET_VALUE";
     protected BeanMetaDataFactory factory;
 
 //**********************************************************************************************************************
@@ -53,7 +54,7 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
     protected abstract T createPrototype();
     protected abstract AnnotatedElement getExpectedAnnotationSource(T prototype);
     protected abstract Class<? extends Annotation> getExpectedAnnotationType(T prototype);
-    
+
 //**********************************************************************************************************************
 // Other Methods
 //**********************************************************************************************************************
@@ -62,42 +63,6 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
     public void setUp()
     {
         factory = new BeanMetaDataFactory();
-    }
-    
-    @Test
-    public void testAttributes()
-    {
-        T prototype = createPrototype();
-        assertEquals(prototype.getAttributeKeys().size(), 0);
-        assertNull(prototype.getAttribute(ATTRIBUTE_KEY));
-        prototype.setAttribute(ATTRIBUTE_KEY, ATTRIBUTE_VALUE);
-        assertEquals(prototype.getAttributeKeys().size(), 1 );
-        assertSame(prototype.getAttributeKeys().iterator().next(), ATTRIBUTE_KEY);
-        assertSame(prototype.getAttribute(ATTRIBUTE_KEY), ATTRIBUTE_VALUE);
-    }
-
-    @Test
-    public void testDefaultAnnotationSource()
-    {
-        T prototype = createPrototype();
-        assertEquals(prototype.getDefaultAnnotationSource(), getExpectedAnnotationSource(prototype));
-    }
-
-    @Test
-    public void testAnnotations()
-    {
-        T prototype = createPrototype();
-        Class<? extends Annotation> annotationType = getExpectedAnnotationType(prototype);
-        assertNotNull(prototype.getAnnotation(annotationType));
-        assertNull(prototype.getAnnotation(UnusedAnnotation.class));
-    }
-
-    @Test
-    public void testSerialization() throws IOException, ClassNotFoundException
-    {
-        T prototype = createPrototype();
-        T copy = serializedCopy(prototype);
-        assertSame(copy, prototype);
     }
 
     @SuppressWarnings("unchecked")
@@ -114,5 +79,41 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
         oin.close();
         bin.close();
         return copy;
+    }
+
+    @Test
+    public void testAnnotations()
+    {
+        T prototype = createPrototype();
+        Class<? extends Annotation> annotationType = getExpectedAnnotationType(prototype);
+        assertNotNull(prototype.getAnnotation(annotationType));
+        assertNull(prototype.getAnnotation(UnusedAnnotation.class));
+    }
+    
+    @Test
+    public void testFacets()
+    {
+        T prototype = createPrototype();
+        assertEquals(prototype.getFacetKeys().size(), 0);
+        assertNull(prototype.getFacet(FACET_KEY));
+        prototype.setFacet(FACET_KEY, FACET_VALUE);
+        assertEquals(prototype.getFacetKeys().size(), 1 );
+        assertSame(prototype.getFacetKeys().iterator().next(), FACET_KEY);
+        assertSame(prototype.getFacet(FACET_KEY), FACET_VALUE);
+    }
+
+    @Test
+    public void testDefaultAnnotationSource()
+    {
+        T prototype = createPrototype();
+        assertEquals(prototype.getDefaultAnnotationSource(), getExpectedAnnotationSource(prototype));
+    }
+
+    @Test
+    public void testSerialization() throws IOException, ClassNotFoundException
+    {
+        T prototype = createPrototype();
+        T copy = serializedCopy(prototype);
+        assertSame(copy, prototype);
     }
 }

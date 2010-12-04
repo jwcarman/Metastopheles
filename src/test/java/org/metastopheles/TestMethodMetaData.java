@@ -27,6 +27,10 @@ import static org.testng.Assert.assertSame;
 
 public class TestMethodMetaData extends AbstractMetaDataObjectTestCase<MethodMetaData>
 {
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
+
     @Override
     protected MethodMetaData createPrototype()
     {
@@ -39,16 +43,16 @@ public class TestMethodMetaData extends AbstractMetaDataObjectTestCase<MethodMet
         return prototype.getMethodDescriptor().getMethod();
     }
 
+    @Override
+    protected Class<? extends Annotation> getExpectedAnnotationType(MethodMetaData prototype)
+    {
+        return MethodAnnotation.class;
+    }
+
     @Test
     public void testBeanMetaDataReference()
     {
         final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
         assertSame(beanMetaData.getMethodMetaData("someMethod").getBeanMetaData(), beanMetaData);
-    }
-
-    @Override
-    protected Class<? extends Annotation> getExpectedAnnotationType(MethodMetaData prototype)
-    {
-        return MethodAnnotation.class;
     }
 }

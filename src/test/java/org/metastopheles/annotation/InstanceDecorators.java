@@ -16,7 +16,7 @@
 
 package org.metastopheles.annotation;
 
-import org.metastopheles.AttributeKey;
+import org.metastopheles.FacetKey;
 import org.metastopheles.BeanMetaData;
 import org.metastopheles.MethodMetaData;
 import org.metastopheles.PropertyMetaData;
@@ -27,30 +27,12 @@ public class InstanceDecorators
 // Fields
 //**********************************************************************************************************************
 
-    public static final AttributeKey<Boolean> FOUND = new AttributeKey<Boolean>() {};
+    public static final FacetKey<Boolean> FOUND = new FacetKey<Boolean>() {};
     private static int instanceCount = 0;
 
 //**********************************************************************************************************************
 // Static Methods
 //**********************************************************************************************************************
-
-    @PropertyDecorator
-    public void decorate(PropertyMetaData metaData, FindMe annotation)
-    {
-        metaData.setAttribute(FOUND, true);
-    }
-
-    @BeanDecorator
-    public void decorate(BeanMetaData metaData, FindMe annotation)
-    {
-        metaData.setAttribute(FOUND, true);
-    }
-
-    @MethodDecorator
-    public void decorate(MethodMetaData metaData, FindMe annotation)
-    {
-        metaData.setAttribute(FOUND, true);
-    }
 
     public static int getInstanceCount()
     {
@@ -64,5 +46,27 @@ public class InstanceDecorators
     public InstanceDecorators()
     {
         instanceCount++;
+    }
+
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
+
+    @BeanDecorator
+    public void decorate(BeanMetaData metaData, FindMe annotation)
+    {
+        metaData.setFacet(FOUND, true);
+    }
+
+    @MethodDecorator
+    public void decorate(MethodMetaData metaData, FindMe annotation)
+    {
+        metaData.setFacet(FOUND, true);
+    }
+
+    @PropertyDecorator
+    public void decorate(PropertyMetaData metaData, FindMe annotation)
+    {
+        metaData.setFacet(FOUND, true);
     }
 }

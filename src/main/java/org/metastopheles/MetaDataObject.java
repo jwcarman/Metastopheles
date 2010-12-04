@@ -36,7 +36,7 @@ public abstract class MetaDataObject implements Serializable
 //**********************************************************************************************************************
 
     private static final long serialVersionUID = 1L;
-    private Map<AttributeKey<?>,Object> attributeMap = new HashMap<AttributeKey<?>, Object>();
+    private Map<FacetKey<?>,Object> facetMap = new HashMap<FacetKey<?>, Object>();
 
 //**********************************************************************************************************************
 // Abstract Methods
@@ -53,14 +53,14 @@ public abstract class MetaDataObject implements Serializable
 //**********************************************************************************************************************
 
     /**
-     * Retrieves an attribute value associated with this MetaDataObject.
-     * @param key the attribute key
-     * @return the attribute value
+     * Retrieves a facet value associated with this MetaDataObject.
+     * @param key the facet key
+     * @return the facet value
      */
     @SuppressWarnings("unchecked")
-    public <T> T getAttribute(AttributeKey<T> key)
+    public <T> T getFacet(FacetKey<T> key)
     {
-        return (T) attributeMap.get(key);
+        return (T) facetMap.get(key);
     }
 
     /**
@@ -76,21 +76,21 @@ public abstract class MetaDataObject implements Serializable
     }
 
     /**
-     * Associates an attribute with this MetaDataObject.
-     * @param key the attribute key
-     * @param value the attribute value
+     * Returns a snapshot of the keys of the facets currently associated with this MetaDataObject.
+     * @return a snapshot of the keys of the facets currently associated with this MetaDataObject
      */
-    public <T> void setAttribute(AttributeKey<T> key, T value)
+    public Set<FacetKey<?>> getFacetKeys()
     {
-        attributeMap.put(key, value);
+        return new HashSet<FacetKey<?>>(facetMap.keySet());
     }
 
     /**
-     * Returns a snapshot of the keys of the attributes currently associated with this MetaDataObject.
-     * @return a snapshot of the keys of the attributes currently associated with this MetaDataObject
+     * Associates a facet with this MetaDataObject.
+     * @param key the facet key
+     * @param value the facet value
      */
-    public Set<AttributeKey<?>> getAttributeKeys()
+    public <T> void setFacet(FacetKey<T> key, T value)
     {
-        return new HashSet<AttributeKey<?>>(attributeMap.keySet());
+        facetMap.put(key, value);
     }
 }

@@ -29,7 +29,7 @@ public class MethodMetaData extends MetaDataObject
 //**********************************************************************************************************************
 // Fields
 //**********************************************************************************************************************
-    
+
     private static final long serialVersionUID = 1L;
     private final MethodDescriptor methodDescriptor;
     private final BeanMetaData beanMetaData;
@@ -58,10 +58,6 @@ public class MethodMetaData extends MetaDataObject
         return methodDescriptor;
     }
 
-    protected Object writeReplace()
-    {
-        return new SerializedForm(beanMetaData, methodDescriptor.getMethod().getName(), getMethodDescriptor().getMethod().getParameterTypes());
-    }
 //**********************************************************************************************************************
 // Other Methods
 //**********************************************************************************************************************
@@ -71,6 +67,15 @@ public class MethodMetaData extends MetaDataObject
     {
         return methodDescriptor.getMethod();
     }
+
+    protected Object writeReplace()
+    {
+        return new SerializedForm(beanMetaData, methodDescriptor.getMethod().getName(), getMethodDescriptor().getMethod().getParameterTypes());
+    }
+
+//**********************************************************************************************************************
+// Inner Classes
+//**********************************************************************************************************************
 
     private static class SerializedForm implements Serializable
     {

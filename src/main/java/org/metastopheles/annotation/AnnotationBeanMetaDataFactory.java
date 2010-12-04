@@ -108,13 +108,14 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
                         if (parameterTypes.length == 2 && metaDataType.equals(parameterTypes[0]) && parameterTypes[1].isAnnotation())
                         {
                             Class<? extends Annotation> annotationType = (Class<? extends Annotation>) parameterTypes[1];
-                            logger.debug("Adding decorator for method " + method);
                             if (Modifier.isStatic(method.getModifiers()))
                             {
+                                logger.debug("Adding static decorator method " + method );
                                 decorators.add(new MethodBasedDecorator(annotationType, null, method));
                             }
                             else
                             {
+                                logger.debug("Adding decorator method " + method);
                                 Object target = targets.get(c.getName());
                                 if (target == null)
                                 {

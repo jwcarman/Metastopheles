@@ -16,12 +16,8 @@
 
 package org.metastopheles.annotation;
 
-import org.metastopheles.AttributeKey;
-import org.metastopheles.BeanMetaData;
-import org.metastopheles.BeanMetaDataFactory;
-import org.metastopheles.MetaDataObject;
-import org.metastopheles.MethodMetaData;
-import org.metastopheles.PropertyMetaData;
+import org.metastopheles.*;
+import org.metastopheles.FacetKey;
 import org.testng.annotations.Test;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +25,15 @@ import static org.testng.Assert.*;
 
 public class TestAnnotationBasedMetaDataDecorator
 {
-    public static final AttributeKey<Boolean> FOUND = new AttributeKey<Boolean>() {};
+//**********************************************************************************************************************
+// Fields
+//**********************************************************************************************************************
+
+    public static final FacetKey<Boolean> FOUND = new FacetKey<Boolean>() {};
+
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
 
     @Test
     public void testAnnotationsFound()
@@ -39,10 +43,14 @@ public class TestAnnotationBasedMetaDataDecorator
         factory.getMethodMetaDataDecorators().add(new FindMeDecorator<MethodMetaData>());
         factory.getPropertyMetaDataDecorators().add(new FindMeDecorator<PropertyMetaData>());
         BeanMetaData meta = factory.getBeanMetaData(FindMeBean.class);
-        assertTrue(meta.getAttribute(FOUND));
-        assertTrue(meta.getPropertyMetaData("name").getAttribute(FOUND));
-        assertTrue(meta.getMethodMetaData("someMethod").getAttribute(FOUND));
+        assertTrue(meta.getFacet(FOUND));
+        assertTrue(meta.getPropertyMetaData("name").getFacet(FOUND));
+        assertTrue(meta.getMethodMetaData("someMethod").getFacet(FOUND));
     }
+
+//**********************************************************************************************************************
+// Inner Classes
+//**********************************************************************************************************************
 
     private static class FindMeDecorator<T extends MetaDataObject> extends AnnotationBasedMetaDataDecorator<T,FindMe>
     {
@@ -54,7 +62,7 @@ public class TestAnnotationBasedMetaDataDecorator
         @Override
         protected void decorate(T metaData, Annotation annotation)
         {
-            metaData.setAttribute(FOUND, true);
+            metaData.setFacet(FOUND, true);
         }
     }
 }

@@ -31,6 +31,10 @@ import static org.testng.Assert.*;
  */
 public class TestBeanMetaData extends AbstractMetaDataObjectTestCase<BeanMetaData>
 {
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
+
     @Override
     protected BeanMetaData createPrototype()
     {

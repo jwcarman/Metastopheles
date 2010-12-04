@@ -20,6 +20,6 @@ package org.metastopheles;
  * @author James Carman
  * @since 1.0
  */
-public abstract class AttributeKey<T>
+public abstract class FacetKey<T>
 {
 }

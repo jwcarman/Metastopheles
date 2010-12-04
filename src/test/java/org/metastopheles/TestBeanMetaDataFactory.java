@@ -28,8 +28,16 @@ import static org.testng.Assert.fail;
 
 public class TestBeanMetaDataFactory
 {
-    private static final AttributeKey<String> ATTRIBUTE_KEY = new AttributeKey<String>() {};
-    private static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE";
+//**********************************************************************************************************************
+// Fields
+//**********************************************************************************************************************
+
+    private static final FacetKey<String> FACET_KEY = new FacetKey<String>() {};
+    private static final String FACET_VALUE = "FACET_VALUE";
+
+//**********************************************************************************************************************
+// Other Methods
+//**********************************************************************************************************************
 
     @Test
     public void testBeanMetaData()
@@ -45,6 +53,14 @@ public class TestBeanMetaDataFactory
         BeanMetaDataFactory factory = new BeanMetaDataFactory();
         factory.getBeanMetaData(Serializable.class);
     }
+
+    @Test
+    public void testMetaDataCached()
+    {
+        BeanMetaDataFactory factory = new BeanMetaDataFactory();
+        assertSame(factory.getBeanMetaData(CustomBean.class), factory.getBeanMetaData(CustomBean.class));  
+    }
+
     @Test
     public void testMethodMetaData()
     {
@@ -63,21 +79,20 @@ public class TestBeanMetaDataFactory
             // Do nothing, expected result.
         }
     }
-    
+
     @Test
-    public void testWithPropertyDecorator()
+    public void testWithBeanDecorator()
     {
         BeanMetaDataFactory factory = new BeanMetaDataFactory();
-        factory.getPropertyMetaDataDecorators().add(new MetaDataDecorator<PropertyMetaData>()
+        factory.getBeanMetaDataDecorators().add(new MetaDataDecorator<BeanMetaData>()
         {
-            public void decorate(PropertyMetaData metaData)
+            public void decorate(BeanMetaData metaData)
             {
-                metaData.setAttribute(ATTRIBUTE_KEY, ATTRIBUTE_VALUE);
+                metaData.setFacet(FACET_KEY, FACET_VALUE);
             }
         });
         BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
-        PropertyMetaData propertyMetaData = beanMetaData.getPropertyMetaData("name");
-        assertSame(propertyMetaData.getAttribute(ATTRIBUTE_KEY), ATTRIBUTE_VALUE);
+        assertSame(beanMetaData.getFacet(FACET_KEY), FACET_VALUE);
     }
 
     @Test
@@ -88,39 +103,35 @@ public class TestBeanMetaDataFactory
         {
             public void decorate(MethodMetaData metaData)
             {
-                metaData.setAttribute(ATTRIBUTE_KEY, ATTRIBUTE_VALUE);
+                metaData.setFacet(FACET_KEY, FACET_VALUE);
             }
         });
         BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
         MethodMetaData propertyMetaData = beanMetaData.getMethodMetaData("someMethod");
-        assertSame(propertyMetaData.getAttribute(ATTRIBUTE_KEY), ATTRIBUTE_VALUE);
+        assertSame(propertyMetaData.getFacet(FACET_KEY), FACET_VALUE);
     }
-
-
+    
     @Test
-    public void testWithBeanDecorator()
+    public void testWithPropertyDecorator()
     {
         BeanMetaDataFactory factory = new BeanMetaDataFactory();
-        factory.getBeanMetaDataDecorators().add(new MetaDataDecorator<BeanMetaData>()
+        factory.getPropertyMetaDataDecorators().add(new MetaDataDecorator<PropertyMetaData>()
         {
-            public void decorate(BeanMetaData metaData)
+            public void decorate(PropertyMetaData metaData)
             {
-                metaData.setAttribute(ATTRIBUTE_KEY, ATTRIBUTE_VALUE);
+                metaData.setFacet(FACET_KEY, FACET_VALUE);
             }
         });
         BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
-        assertSame(beanMetaData.getAttribute(ATTRIBUTE_KEY), ATTRIBUTE_VALUE);
+        PropertyMetaData propertyMetaData = beanMetaData.getPropertyMetaData("name");
+        assertSame(propertyMetaData.getFacet(FACET_KEY), FACET_VALUE);
     }
 
-    @Test
-    public void testMetaDataCached()
-    {
-        BeanMetaDataFactory factory = new BeanMetaDataFactory();
-        assertSame(factory.getBeanMetaData(CustomBean.class), factory.getBeanMetaData(CustomBean.class));  
-    }
+//**********************************************************************************************************************
+// Inner Classes
+//**********************************************************************************************************************
 
     private abstract class InvisibleInnerClass
     {
-
     }
 }
