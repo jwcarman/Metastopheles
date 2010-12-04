@@ -19,7 +19,7 @@
     <groupId>org.metastopheles</groupId>
     <artifactId>metastopheles</artifactId>
     <packaging>jar</packaging>
-    <version>1.2</version>
+    <version>1.2-SNAPSHOT</version>
     <name>metastopheles</name>
     <url>http://maven.apache.org</url>
     <licenses>
