@@ -85,6 +85,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
                     <remoteTagging>true</remoteTagging>
                 </configuration>
             </plugin>
@@ -133,10 +134,10 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:svn:http://metastopheles.svn.sourceforge.net/svnroot/metastopheles/tags/metastopheles-1.2</connection>
-        <developerConnection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/tags/metastopheles-1.2
+        <connection>scm:svn:http://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk</connection>
+        <developerConnection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk
         </developerConnection>
-        <url>http://metastopheles.svn.sourceforge.net/viewvc/metastopheles/tags/metastopheles-1.2</url>
+        <url>http://metastopheles.svn.sourceforge.net/viewvc/metastopheles/trunk</url>
     </scm>
 
     <mailingLists>
