@@ -106,6 +106,11 @@ public class BeanMetaDataFactory
 // Other Methods
 //**********************************************************************************************************************
 
+    public synchronized void clear()
+    {
+        metaDataMap.clear();
+    }
+
     public synchronized BeanMetaData getBeanMetaData(Class beanClass)
     {
         if (metaDataMap.containsKey(beanClass))
