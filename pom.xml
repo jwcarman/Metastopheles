@@ -124,17 +124,17 @@
         <site>
             <id>sourceforge.net</id>
             <name>Metastopheles Site</name>
-            <url>scp://shell.sourceforge.net/home/groups/m/me/metastopheles/htdocs</url>
+            <url>scp://shell.sourceforge.net/home/project-web/metastopheles/htdocs</url>
         </site>
         <repository>
             <id>sourceforge.net</id>
             <name>Metastopheles Release</name>
-            <url>scp://shell.sourceforge.net/home/groups/m/me/metastopheles/htdocs/m2repo/releases</url>
+            <url>scp://shell.sourceforge.net/home/project-web/metastopheles/htdocs/m2repo/releases</url>
         </repository>
         <snapshotRepository>
             <id>sourceforge.net</id>
             <name>Metastopheles Snapshot</name>
-            <url>scp://shell.sourceforge.net/home/groups/m/me/metastopheles/htdocs/m2repo/snapshots</url>
+            <url>scp://shell.sourceforge.net/home/project-web/metastopheles/htdocs/m2repo/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
