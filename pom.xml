@@ -140,7 +140,7 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:svn:http://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk</connection>
+        <connection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk</connection>
         <developerConnection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk
         </developerConnection>
         <url>http://metastopheles.svn.sourceforge.net/viewvc/metastopheles/trunk</url>
