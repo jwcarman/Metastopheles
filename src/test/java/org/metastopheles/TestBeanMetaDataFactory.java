@@ -22,6 +22,7 @@ import org.testng.annotations.Test;
 import java.io.Serializable;
 
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
@@ -125,6 +126,16 @@ public class TestBeanMetaDataFactory
         BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
         PropertyMetaData propertyMetaData = beanMetaData.getPropertyMetaData("name");
         assertSame(propertyMetaData.getFacet(FACET_KEY), FACET_VALUE);
+    }
+
+    @Test
+    public void testClear()
+    {
+        BeanMetaDataFactory factory = new BeanMetaDataFactory();
+        BeanMetaData original = factory.getBeanMetaData(CustomBean.class);
+        factory.clear();
+        BeanMetaData subsequent = factory.getBeanMetaData(CustomBean.class);
+        assertNotSame(original, subsequent);
     }
 
 //**********************************************************************************************************************
