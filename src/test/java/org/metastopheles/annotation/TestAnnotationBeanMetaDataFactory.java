@@ -16,7 +16,6 @@
 
 package org.metastopheles.annotation;
 
-import com.sun.org.apache.xerces.internal.xni.Augmentations;
 import org.metastopheles.BeanMetaData;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
