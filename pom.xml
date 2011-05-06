@@ -25,7 +25,7 @@
     <groupId>org.metastopheles</groupId>
     <artifactId>metastopheles</artifactId>
     <packaging>jar</packaging>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
     <name>metastopheles</name>
     <description>A Class/Property/Method MetaData API for Java</description>
     <url>http://maven.apache.org</url>
@@ -140,10 +140,10 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:svn:http://metastopheles.svn.sourceforge.net/svnroot/metastopheles/tags/metastopheles-1.5</connection>
-        <developerConnection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/tags/metastopheles-1.5
+        <connection>scm:svn:http://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk</connection>
+        <developerConnection>scm:svn:https://metastopheles.svn.sourceforge.net/svnroot/metastopheles/trunk
         </developerConnection>
-        <url>http://metastopheles.svn.sourceforge.net/viewvc/metastopheles/tags/metastopheles-1.5</url>
+        <url>http://metastopheles.svn.sourceforge.net/viewvc/metastopheles/trunk</url>
     </scm>
 
     <mailingLists>
