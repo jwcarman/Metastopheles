@@ -69,14 +69,49 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
             db.setScanMethodAnnotations(true);
             db.setScanFieldAnnotations(false);
             db.setScanParameterAnnotations(false);
+            db.crossReferenceMetaAnnotations();
             db.scanArchives(urls);
+            // db.crossReferenceImplementedInterfaces();
             final Map<String, Set<String>> index = db.getAnnotationIndex();
             Map<String, Object> targets = new TreeMap<String, Object>();
+
+            final Set<String> manuallyScannedClasses = index.get(ScanMe.class.getName());
+            if (manuallyScannedClasses != null && !manuallyScannedClasses.isEmpty())
+            {
+                for (String className : manuallyScannedClasses)
+                {
+                    try
+                    {
+                        Class c = Class.forName(className);
+                        while (c != null)
+                        {
+                            for (String annotationName : index.keySet())
+                            {
+                                Set<String> annotatedClasses = index.get(annotationName);
+                                if (annotatedClasses.contains(c.getName()))
+                                {
+                                    annotatedClasses.add(className);
+                                }
+                            }
+                            c = c.getSuperclass();
+                        }
+                    }
+                    catch (ClassNotFoundException e)
+                    {
+                        logger.error("Unable to load manually scanned class " + className + ".", e);
+                    }
+
+                }
+            }
             scanForMetaDataMethods(index, targets, BeanMetaData.class, BeanDecorator.class, getBeanMetaDataDecorators());
             scanForMetaDataMethods(index, targets, PropertyMetaData.class, PropertyDecorator.class, getPropertyMetaDataDecorators());
             scanForMetaDataMethods(index, targets, MethodMetaData.class, MethodDecorator.class, getMethodMetaDataDecorators());
         }
         catch (IOException e)
+        {
+            throw new RuntimeException("Unable to scan classpath for annotations.", e);
+        }
+        catch (AnnotationDB.CrossReferenceException e)
         {
             throw new RuntimeException("Unable to scan classpath for annotations.", e);
         }
@@ -87,7 +122,7 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
 //**********************************************************************************************************************
 
     @SuppressWarnings("unchecked")
-    private <T extends MetaDataObject> void scanForMetaDataMethods(Map<String, Set<String>> index, Map<String,Object> targets, Class<T> metaDataType, Class<? extends Annotation> markerAnnotationType, List<MetaDataDecorator<T>> decorators)
+    private <T extends MetaDataObject> void scanForMetaDataMethods(Map<String, Set<String>> index, Map<String, Object> targets, Class<T> metaDataType, Class<? extends Annotation> markerAnnotationType, List<MetaDataDecorator<T>> decorators)
     {
         final Set<String> classes = index.get(markerAnnotationType.getName());
         if (classes == null || classes.isEmpty())
@@ -110,10 +145,10 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
                             Class<? extends Annotation> annotationType = (Class<? extends Annotation>) parameterTypes[1];
                             if (Modifier.isStatic(method.getModifiers()))
                             {
-                                logger.debug("Adding static decorator method " + method );
+                                logger.debug("Adding static decorator method " + method);
                                 decorators.add(new MethodBasedDecorator(annotationType, null, method));
                             }
-                            else
+                            else if (!Modifier.isAbstract(c.getModifiers()))
                             {
                                 logger.debug("Adding decorator method " + method);
                                 Object target = targets.get(c.getName());

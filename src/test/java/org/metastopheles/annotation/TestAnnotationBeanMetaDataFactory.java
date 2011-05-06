@@ -16,6 +16,7 @@
 
 package org.metastopheles.annotation;
 
+import com.sun.org.apache.xerces.internal.xni.Augmentations;
 import org.metastopheles.BeanMetaData;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -38,6 +39,14 @@ public class TestAnnotationBeanMetaDataFactory
     protected void setUp() throws Exception
     {
         factory = new AnnotationBeanMetaDataFactory();
+    }
+
+    @Test
+    public void testInheritedInstanceDecorators()
+    {
+        BeanMetaData meta = factory.getBeanMetaData(FindMeBean.class);
+        assertTrue(meta.getPropertyMetaData("name").getFacet(EmptyConcreteDecorators.FOUND));
+        assertTrue(meta.getPropertyMetaData("name").getFacet(AugmentedConcreteDecorators.FOUND));
     }
 
     @Test
