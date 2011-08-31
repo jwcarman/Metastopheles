@@ -52,7 +52,7 @@ public class TestAnnotationBasedMetaDataDecorator
 // Inner Classes
 //**********************************************************************************************************************
 
-    private static class FindMeDecorator<T extends MetaDataObject> extends AnnotationBasedMetaDataDecorator<T,FindMe>
+    private static final class FindMeDecorator<T extends MetaDataObject> extends AnnotationBasedMetaDataDecorator<T,FindMe>
     {
         private FindMeDecorator()
         {

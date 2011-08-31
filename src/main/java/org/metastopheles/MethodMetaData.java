@@ -77,7 +77,7 @@ public class MethodMetaData extends MetaDataObject
 // Inner Classes
 //**********************************************************************************************************************
 
-    private static class SerializedForm implements Serializable
+    private static final class SerializedForm implements Serializable
     {
         private static final long serialVersionUID = 1L;
         private final BeanMetaData beanMetaData;

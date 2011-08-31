@@ -120,7 +120,7 @@ public class BeanMetaData extends MetaDataObject
 // Inner Classes
 //**********************************************************************************************************************
 
-    private static class SerializedForm implements Serializable
+    private static final class SerializedForm implements Serializable
     {
         private final String factoryId;
         private final Class beanClass;
