@@ -129,36 +129,7 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
         {
             try
             {
-                Class<?> c = Class.forName(className);
-                for (Method method : c.getMethods())
-                {
-                    if (method.isAnnotationPresent(markerAnnotationType))
-                    {
-                        Class[] parameterTypes = method.getParameterTypes();
-                        if (parameterTypes.length == 2 && metaDataType.equals(parameterTypes[0]) && parameterTypes[1].isAnnotation())
-                        {
-                            Class<? extends Annotation> annotationType = (Class<? extends Annotation>) parameterTypes[1];
-                            if (Modifier.isStatic(method.getModifiers()))
-                            {
-                                logger.debug("Adding static decorator method " + method);
-                                decorators.add(new MethodBasedDecorator(annotationType, null, method));
-                            }
-                            else if (!Modifier.isAbstract(c.getModifiers()))
-                            {
-                                logger.debug("Adding decorator method " + method);
-                                Object target = targets.get(c.getName());
-                                if (target == null)
-                                {
-                                    logger.debug("Instantiating " + c.getName() + " instance to handle decorator methods found...");
-                                    target = c.newInstance();
-                                    targets.put(c.getName(), target);
-                                }
-
-                                decorators.add(new MethodBasedDecorator(annotationType, target, method));
-                            }
-                        }
-                    }
-                }
+                scanClass(className, targets, metaDataType, markerAnnotationType, decorators);
             }
             catch (ClassNotFoundException e)
             {
@@ -172,6 +143,45 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
             {
                 logger.error("Unable to instantiate object of type " + className + ".", e);
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends MetaDataObject> void scanClass(String className, Map<String, Object> targets, Class<T> metaDataType, Class<? extends Annotation> markerAnnotationType, List<MetaDataDecorator<T>> decorators) throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        Class<?> c = Class.forName(className);
+        for (Method method : c.getMethods())
+        {
+            if (method.isAnnotationPresent(markerAnnotationType))
+            {
+                Class[] parameterTypes = method.getParameterTypes();
+                if (parameterTypes.length == 2 && metaDataType.equals(parameterTypes[0]) && parameterTypes[1].isAnnotation())
+                {
+                    processAnnotatedMethod(targets, decorators, c, method, parameterTypes[1]);
+                }
+            }
+        }
+    }
+
+    private <T extends MetaDataObject, A extends Annotation> void processAnnotatedMethod(Map<String, Object> targets, List<MetaDataDecorator<T>> decorators, Class<?> c, Method method, Class<A> annotationType) throws InstantiationException, IllegalAccessException
+    {
+        if (Modifier.isStatic(method.getModifiers()))
+        {
+            logger.debug("Adding static decorator method " + method);
+            decorators.add(new MethodBasedDecorator<T, A>(annotationType, null, method));
+        }
+        else if (!Modifier.isAbstract(c.getModifiers()))
+        {
+            logger.debug("Adding decorator method " + method);
+            Object target = targets.get(c.getName());
+            if (target == null)
+            {
+                logger.debug("Instantiating " + c.getName() + " instance to handle decorator methods found...");
+                target = c.newInstance();
+                targets.put(c.getName(), target);
+            }
+
+            decorators.add(new MethodBasedDecorator<T, A>(annotationType, target, method));
         }
     }
 
