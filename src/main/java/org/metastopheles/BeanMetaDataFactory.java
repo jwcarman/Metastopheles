@@ -32,7 +32,7 @@ public class BeanMetaDataFactory
 //----------------------------------------------------------------------------------------------------------------------
 
     public static final String CLASS_PROPERTY = "class";
-    private static final Map<String,BeanMetaDataFactory> factoryRegistry = new ConcurrentHashMap<String, BeanMetaDataFactory>();
+    private static final Map<String,BeanMetaDataFactory> FACTORY_REGISTRY = new ConcurrentHashMap<String, BeanMetaDataFactory>();
     private final Map<Class, BeanMetaData> metaDataMap = new WeakHashMap<Class, BeanMetaData>();
 
     private List<MetaDataDecorator<BeanMetaData>> beanMetaDataDecorators = new LinkedList<MetaDataDecorator<BeanMetaData>>();
@@ -46,7 +46,7 @@ public class BeanMetaDataFactory
 
     static BeanMetaDataFactory get(String id)
     {
-        return factoryRegistry.get(id);
+        return FACTORY_REGISTRY.get(id);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ public class BeanMetaDataFactory
 
     public BeanMetaDataFactory()
     {
-        factoryRegistry.put(id, this);
+        FACTORY_REGISTRY.put(id, this);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
