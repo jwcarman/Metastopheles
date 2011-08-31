@@ -89,7 +89,8 @@ public class MethodMetaData extends MetaDataObject
         {
             this.beanMetaData = beanMetaData;
             this.methodName = methodName;
-            this.parameterTypes = parameterTypes;
+            this.parameterTypes = new Class<?>[parameterTypes.length];
+            System.arraycopy(parameterTypes, 0, this.parameterTypes, 0, parameterTypes.length);
         }
 
         protected Object readResolve()
