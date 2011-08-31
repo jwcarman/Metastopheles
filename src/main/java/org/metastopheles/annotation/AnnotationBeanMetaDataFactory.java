@@ -204,7 +204,7 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
             }
             catch (InvocationTargetException e)
             {
-                throw new MetaDataException("Decorator method " + method + " threw an exception.", e.getTargetException());
+                throw new MetaDataException("Decorator method " + method + " threw an exception.", e);
             }
         }
     }
