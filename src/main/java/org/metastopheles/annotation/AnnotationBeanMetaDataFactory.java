@@ -16,12 +16,7 @@
 
 package org.metastopheles.annotation;
 
-import org.metastopheles.BeanMetaData;
-import org.metastopheles.BeanMetaDataFactory;
-import org.metastopheles.MetaDataDecorator;
-import org.metastopheles.MetaDataObject;
-import org.metastopheles.MethodMetaData;
-import org.metastopheles.PropertyMetaData;
+import org.metastopheles.*;
 import org.scannotation.AnnotationDB;
 import org.scannotation.ClasspathUrlFinder;
 import org.slf4j.Logger;
@@ -109,11 +104,11 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Unable to scan classpath for annotations.", e);
+            throw new MetaDataException("Unable to scan classpath for annotations.", e);
         }
         catch (AnnotationDB.CrossReferenceException e)
         {
-            throw new RuntimeException("Unable to scan classpath for annotations.", e);
+            throw new MetaDataException("Unable to scan classpath for annotations.", e);
         }
     }
 
@@ -205,11 +200,11 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
             }
             catch (IllegalAccessException e)
             {
-                throw new RuntimeException("Unable to access decorator method " + method + ".", e);
+                throw new MetaDataException("Unable to access decorator method " + method + ".", e);
             }
             catch (InvocationTargetException e)
             {
-                throw new RuntimeException("Decorator method " + method + " threw an exception.", e.getTargetException());
+                throw new MetaDataException("Decorator method " + method + " threw an exception.", e.getTargetException());
             }
         }
     }

@@ -159,7 +159,7 @@ public class BeanMetaDataFactory
             }
             catch (IntrospectionException e)
             {
-                throw new RuntimeException("Unable to lookup bean information for bean class " + beanClass.getName() + ".", e);
+                throw new MetaDataException("Unable to lookup bean information for bean class " + beanClass.getName() + ".", e);
             }
         }
     }
