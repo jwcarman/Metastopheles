@@ -184,7 +184,7 @@ public class AnnotationBeanMetaDataFactory extends BeanMetaDataFactory
 // Inner Classes
 //**********************************************************************************************************************
 
-    private static class MethodBasedDecorator<T extends MetaDataObject, A extends Annotation> extends AnnotationBasedMetaDataDecorator<T, A>
+    private static final class MethodBasedDecorator<T extends MetaDataObject, A extends Annotation> extends AnnotationBasedMetaDataDecorator<T, A>
     {
         private final Object target;
         private final Method method;
