@@ -16,21 +16,10 @@
 
 package org.metastopheles;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.MethodDescriptor;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Carman
@@ -38,11 +27,12 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class BeanMetaDataFactory
 {
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Fields
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 
-    private static final Map<String,BeanMetaDataFactory> factoryRegistry = new HashMap<String,BeanMetaDataFactory>();
+    public static final String CLASS_PROPERTY = "class";
+    private static final Map<String,BeanMetaDataFactory> factoryRegistry = new ConcurrentHashMap<String, BeanMetaDataFactory>();
     private final Map<Class, BeanMetaData> metaDataMap = new WeakHashMap<Class, BeanMetaData>();
 
     private List<MetaDataDecorator<BeanMetaData>> beanMetaDataDecorators = new LinkedList<MetaDataDecorator<BeanMetaData>>();
@@ -50,27 +40,27 @@ public class BeanMetaDataFactory
     private List<MetaDataDecorator<PropertyMetaData>> propertyMetaDataDecorators = new LinkedList<MetaDataDecorator<PropertyMetaData>>();
     private final String id = UUID.randomUUID().toString();
 
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Static Methods
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 
     static BeanMetaDataFactory get(String id)
     {
         return factoryRegistry.get(id);
     }
 
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Constructors
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 
     public BeanMetaDataFactory()
     {
         factoryRegistry.put(id, this);
     }
 
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Getter/Setter Methods
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 
     public List<MetaDataDecorator<BeanMetaData>> getBeanMetaDataDecorators()
     {
@@ -102,9 +92,9 @@ public class BeanMetaDataFactory
         this.propertyMetaDataDecorators = propertyMetaDataDecorators;
     }
 
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Other Methods
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 
     public synchronized void clear()
     {
@@ -128,38 +118,48 @@ public class BeanMetaDataFactory
                     decorator.decorate(beanMetaData);
                 }
                 final Set<Method> visitedMethods = new HashSet<Method>();
-                for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
-                {
-                    visitedMethods.add(descriptor.getReadMethod());
-                    visitedMethods.add(descriptor.getWriteMethod());
-                    if (!"class".equals(descriptor.getName()))
-                    {
-                        final PropertyMetaData propertyMetaData = new PropertyMetaData(beanMetaData, descriptor);
-                        beanMetaData.addPropertyMetaData(propertyMetaData);
-                        for (MetaDataDecorator<PropertyMetaData> decorator : propertyMetaDataDecorators)
-                        {
-                            decorator.decorate(propertyMetaData);
-                        }
-                    }
-                }
-                for (MethodDescriptor descriptor : beanInfo.getMethodDescriptors())
-                {
-                    if (!visitedMethods.contains(descriptor.getMethod()) && !Object.class.equals(descriptor.getMethod().getDeclaringClass()))
-                    {
-                        final MethodMetaData methodMetaData = new MethodMetaData(beanMetaData, descriptor);
-                        beanMetaData.addMethodMetaData(methodMetaData);
-                        for (MetaDataDecorator<MethodMetaData> decorator : methodMetaDataDecorators)
-                        {
-                            decorator.decorate(methodMetaData);
-                        }
-                    }
-                }
+                addPropertyDescriptors(beanInfo, beanMetaData, visitedMethods);
+                addMethodDescriptors(beanInfo, beanMetaData, visitedMethods);
                 metaDataMap.put(beanClass, beanMetaData);
                 return beanMetaData;
             }
             catch (IntrospectionException e)
             {
                 throw new MetaDataException("Unable to lookup bean information for bean class " + beanClass.getName() + ".", e);
+            }
+        }
+    }
+
+    private void addPropertyDescriptors(BeanInfo beanInfo, BeanMetaData beanMetaData, Set<Method> visitedMethods)
+    {
+        for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
+        {
+            visitedMethods.add(descriptor.getReadMethod());
+            visitedMethods.add(descriptor.getWriteMethod());
+            if (!CLASS_PROPERTY.equals(descriptor.getName()))
+            {
+                final PropertyMetaData propertyMetaData = new PropertyMetaData(beanMetaData, descriptor);
+                beanMetaData.addPropertyMetaData(propertyMetaData);
+                for (MetaDataDecorator<PropertyMetaData> decorator : propertyMetaDataDecorators)
+                {
+                    decorator.decorate(propertyMetaData);
+                }
+            }
+        }
+    }
+
+    private void addMethodDescriptors(BeanInfo beanInfo, BeanMetaData beanMetaData, Set<Method> visitedMethods)
+    {
+        for (MethodDescriptor descriptor : beanInfo.getMethodDescriptors())
+        {
+            if (!visitedMethods.contains(descriptor.getMethod()) && !Object.class.equals(descriptor.getMethod().getDeclaringClass()))
+            {
+                final MethodMetaData methodMetaData = new MethodMetaData(beanMetaData, descriptor);
+                beanMetaData.addMethodMetaData(methodMetaData);
+                for (MetaDataDecorator<MethodMetaData> decorator : methodMetaDataDecorators)
+                {
+                    decorator.decorate(methodMetaData);
+                }
             }
         }
     }
