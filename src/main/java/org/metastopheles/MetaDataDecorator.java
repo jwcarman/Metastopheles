@@ -26,5 +26,5 @@ public interface MetaDataDecorator<T extends MetaDataObject>
 // Other Methods
 //**********************************************************************************************************************
 
-    public void decorate(T metaData);
+    void decorate(T metaData);
 }
