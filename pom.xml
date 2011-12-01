@@ -25,7 +25,7 @@
     <groupId>org.metastopheles</groupId>
     <artifactId>metastopheles</artifactId>
     <packaging>jar</packaging>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8</version>
     <name>metastopheles</name>
     <description>A Class/Property/Method MetaData API for Java</description>
     <url>http://maven.apache.org</url>
