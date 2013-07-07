@@ -78,16 +78,27 @@ public class PropertyMetaData extends MetaDataObject
     @Override
     protected List<AnnotatedElement> getAnnotationSources()
     {
-        Field field = null;
-        try
-        {
-            field = beanMetaData.getBeanDescriptor().getBeanClass().getDeclaredField(propertyDescriptor.getName());
-        }
-        catch (NoSuchFieldException e)
-        {
-            // Do nothing...
-        }
+        Field field = getDeclaredField(beanMetaData.getBeanDescriptor().getBeanClass(), propertyDescriptor.getName());
         return Arrays.<AnnotatedElement>asList(propertyDescriptor.getReadMethod(), field);
+    }
+
+    private Field getDeclaredField(Class<?> c, String fieldName)
+    {
+        Class<?> searchClass = c;
+        while (!Object.class.equals(searchClass))
+        {
+            try
+            {
+                Field field = searchClass.getDeclaredField(fieldName);
+                return field;
+            }
+            catch (NoSuchFieldException e)
+            {
+                // Ignored...
+            }
+            searchClass = searchClass.getSuperclass();
+        }
+        return null;
     }
 
     protected Object writeReplace()

@@ -17,6 +17,7 @@
 package org.metastopheles;
 
 import org.metastopheles.util.CustomBean;
+import org.metastopheles.util.CustomBeanSubclass;
 import org.metastopheles.util.PropertyAnnotation;
 import org.testng.annotations.Test;
 
@@ -75,14 +76,14 @@ public class TestPropertyMetaData extends AbstractMetaDataObjectTestCase<Propert
     @Test
     public void testWithFieldAnnotation()
     {
-        final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
+        final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBeanSubclass.class);
         assertNotNull(beanMetaData.getPropertyMetaData("annotatedField").getAnnotation(PropertyAnnotation.class));
     }
 
     @Test
     public void testWithNoAnnotation()
     {
-        final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
+        final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBeanSubclass.class);
         assertNull(beanMetaData.getPropertyMetaData("mismatchedField").getAnnotation(PropertyAnnotation.class));
     }
 
