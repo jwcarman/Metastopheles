@@ -19,6 +19,9 @@ package org.metastopheles;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author James Carman
@@ -55,6 +58,7 @@ public class PropertyMetaData extends MetaDataObject
 
     /**
      * Returns the property descriptor
+     *
      * @return the property descriptor
      */
     public PropertyDescriptor getPropertyDescriptor()
@@ -68,12 +72,22 @@ public class PropertyMetaData extends MetaDataObject
 
     /**
      * The default annotation source for a property is its getter method.
+     *
      * @return the property's getter method
      */
     @Override
-    protected AnnotatedElement getDefaultAnnotationSource()
+    protected List<AnnotatedElement> getAnnotationSources()
     {
-        return propertyDescriptor.getReadMethod();
+        Field field = null;
+        try
+        {
+            field = beanMetaData.getBeanDescriptor().getBeanClass().getDeclaredField(propertyDescriptor.getName());
+        }
+        catch (NoSuchFieldException e)
+        {
+            // Do nothing...
+        }
+        return Arrays.<AnnotatedElement>asList(propertyDescriptor.getReadMethod(), field);
     }
 
     protected Object writeReplace()

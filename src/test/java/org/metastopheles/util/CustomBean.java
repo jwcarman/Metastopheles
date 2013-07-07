@@ -16,25 +16,36 @@
 
 package org.metastopheles.util;
 
-import org.metastopheles.util.BeanAnnotation;
-import org.metastopheles.util.MethodAnnotation;
-import org.metastopheles.util.PropertyAnnotation;
-
 /**
  * @author James Carman
  */
 @BeanAnnotation
 public class CustomBean
 {
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Fields
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 
     private String name;
 
-//**********************************************************************************************************************
+    @PropertyAnnotation
+    private String annotatedField;
+
+    private String otherName;
+
+//----------------------------------------------------------------------------------------------------------------------
 // Getter/Setter Methods
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
+
+    public String getAnnotatedField()
+    {
+        return annotatedField;
+    }
+
+    public void setAnnotatedField(String annotatedField)
+    {
+        this.annotatedField = annotatedField;
+    }
 
     @PropertyAnnotation
     public String getName()
@@ -47,9 +58,19 @@ public class CustomBean
         this.name = name;
     }
 
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
 // Other Methods
-//**********************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------
+
+    public String getMismatchedField()
+    {
+        return otherName;
+    }
+
+    public void setMismatchedField(String mismatchedField)
+    {
+        this.otherName = mismatchedField;
+    }
 
     @MethodAnnotation
     public void someMethod()

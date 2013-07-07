@@ -22,7 +22,10 @@ import org.testng.annotations.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+
 import static org.testng.Assert.*;
 
 /**
@@ -42,9 +45,9 @@ public class TestBeanMetaData extends AbstractMetaDataObjectTestCase<BeanMetaDat
     }
 
     @Override
-    protected AnnotatedElement getExpectedAnnotationSource(BeanMetaData prototype)
+    protected List<AnnotatedElement> getExpectedAnnotationSources(BeanMetaData prototype)
     {
-        return prototype.getBeanDescriptor().getBeanClass();
+        return Arrays.<AnnotatedElement>asList(prototype.getBeanDescriptor().getBeanClass());
     }
 
     @Override
@@ -58,12 +61,12 @@ public class TestBeanMetaData extends AbstractMetaDataObjectTestCase<BeanMetaDat
     {
         BeanMetaData metaData = factory.getBeanMetaData(CustomBean.class);
         Set<String> propertyNames = metaData.getPropertyNames();
-        assertEquals(propertyNames.size(), 1);
+        assertEquals(propertyNames.size(), 3);
         assertTrue(propertyNames.contains("name"));
         propertyNames.clear();
         Set<String> otherPropertyNames = metaData.getPropertyNames();
         assertNotSame(propertyNames, otherPropertyNames);
-        assertEquals(otherPropertyNames.size(), 1);
+        assertEquals(otherPropertyNames.size(), 3);
         assertTrue(otherPropertyNames.contains("name"));
     }
 }

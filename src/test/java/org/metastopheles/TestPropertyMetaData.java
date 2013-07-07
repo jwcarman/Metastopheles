@@ -22,8 +22,11 @@ import org.testng.annotations.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.*;
 
 /**
  * @author James Carman
@@ -42,9 +45,18 @@ public class TestPropertyMetaData extends AbstractMetaDataObjectTestCase<Propert
     }
 
     @Override
-    protected AnnotatedElement getExpectedAnnotationSource(PropertyMetaData prototype)
+    protected List<AnnotatedElement> getExpectedAnnotationSources(PropertyMetaData prototype)
     {
-        return prototype.getPropertyDescriptor().getReadMethod();
+        Field field = null;
+        try
+        {
+            field = prototype.getBeanMetaData().getBeanDescriptor().getBeanClass().getDeclaredField(prototype.getPropertyDescriptor().getName());
+        }
+        catch (NoSuchFieldException e)
+        {
+            //Ignore...
+        }
+        return Arrays.<AnnotatedElement>asList(prototype.getPropertyDescriptor().getReadMethod(), field);
     }
 
     @Override
@@ -59,4 +71,19 @@ public class TestPropertyMetaData extends AbstractMetaDataObjectTestCase<Propert
         final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
         assertSame(beanMetaData.getPropertyMetaData("name").getBeanMetaData(), beanMetaData);
     }
+
+    @Test
+    public void testWithFieldAnnotation()
+    {
+        final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
+        assertNotNull(beanMetaData.getPropertyMetaData("annotatedField").getAnnotation(PropertyAnnotation.class));
+    }
+
+    @Test
+    public void testWithNoAnnotation()
+    {
+        final BeanMetaData beanMetaData = factory.getBeanMetaData(CustomBean.class);
+        assertNull(beanMetaData.getPropertyMetaData("mismatchedField").getAnnotation(PropertyAnnotation.class));
+    }
+
 }

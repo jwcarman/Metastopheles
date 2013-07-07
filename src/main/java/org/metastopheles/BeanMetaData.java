@@ -20,10 +20,7 @@ import java.beans.BeanDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author James Carman
@@ -65,9 +62,9 @@ public class BeanMetaData extends MetaDataObject
 //**********************************************************************************************************************
 
     @Override
-    protected AnnotatedElement getDefaultAnnotationSource()
+    protected List<AnnotatedElement> getAnnotationSources()
     {
-        return beanDescriptor.getBeanClass();
+        return Arrays.<AnnotatedElement>asList(beanDescriptor.getBeanClass());
     }
 
     void addMethodMetaData(MethodMetaData methodMetaData)

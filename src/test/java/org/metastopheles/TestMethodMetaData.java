@@ -22,6 +22,8 @@ import org.testng.annotations.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.testng.Assert.assertSame;
 
@@ -38,9 +40,9 @@ public class TestMethodMetaData extends AbstractMetaDataObjectTestCase<MethodMet
     }
 
     @Override
-    protected AnnotatedElement getExpectedAnnotationSource(MethodMetaData prototype)
+    protected List<AnnotatedElement> getExpectedAnnotationSources(MethodMetaData prototype)
     {
-        return prototype.getMethodDescriptor().getMethod();
+        return Arrays.<AnnotatedElement>asList(prototype.getMethodDescriptor().getMethod());
     }
 
     @Override

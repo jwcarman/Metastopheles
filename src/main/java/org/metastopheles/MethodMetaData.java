@@ -19,6 +19,8 @@ package org.metastopheles;
 import java.beans.MethodDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author James Carman
@@ -63,9 +65,9 @@ public class MethodMetaData extends MetaDataObject
 //**********************************************************************************************************************
 
     @Override
-    protected AnnotatedElement getDefaultAnnotationSource()
+    protected List<AnnotatedElement> getAnnotationSources()
     {
-        return methodDescriptor.getMethod();
+        return Arrays.<AnnotatedElement>asList(methodDescriptor.getMethod());
     }
 
     protected Object writeReplace()

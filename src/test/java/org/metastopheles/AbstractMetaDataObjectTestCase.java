@@ -27,6 +27,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -52,7 +53,7 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
 //**********************************************************************************************************************
 
     protected abstract T createPrototype();
-    protected abstract AnnotatedElement getExpectedAnnotationSource(T prototype);
+    protected abstract List<AnnotatedElement> getExpectedAnnotationSources(T prototype);
     protected abstract Class<? extends Annotation> getExpectedAnnotationType(T prototype);
 
 //**********************************************************************************************************************
@@ -106,7 +107,8 @@ public abstract class AbstractMetaDataObjectTestCase<T extends MetaDataObject>
     public void testDefaultAnnotationSource()
     {
         T prototype = createPrototype();
-        assertEquals(prototype.getDefaultAnnotationSource(), getExpectedAnnotationSource(prototype));
+        assertEquals(prototype.getAnnotationSources(), getExpectedAnnotationSources(prototype));
+
     }
 
     @Test

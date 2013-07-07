@@ -19,10 +19,7 @@ package org.metastopheles;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A MetaDataObject contains data about a particular aspect of a bean class.
@@ -46,7 +43,7 @@ public abstract class MetaDataObject implements Serializable
      * Returns the default source for annotation data for this MetaDataObject.
      * @return the default source for annotation data for this MetaDataObject
      */
-    protected abstract AnnotatedElement getDefaultAnnotationSource();
+    protected abstract List<AnnotatedElement> getAnnotationSources();
 
 //**********************************************************************************************************************
 // Other Methods
@@ -68,11 +65,19 @@ public abstract class MetaDataObject implements Serializable
      *
      * @param annotationType the annotation type
      * @return the annotation
-     * @see #getDefaultAnnotationSource()
+     * @see #getAnnotationSources()
      */
     public <A extends Annotation> A getAnnotation(Class<A> annotationType)
     {
-        return getDefaultAnnotationSource().getAnnotation(annotationType);
+        for (AnnotatedElement annotationSource : getAnnotationSources())
+        {
+            A annotation = annotationSource == null ? null : annotationSource.getAnnotation(annotationType);
+            if(annotation != null)
+            {
+                return annotation;
+            }
+        }
+        return null;
     }
 
     /**
